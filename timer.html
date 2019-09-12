@@ -1,0 +1,176 @@
+<html>
+<head>
+<script type="text/javascript">
+
+function Get_Cookie( check_name ) {
+
+var a_all_cookies = document.cookie.split( ';' );
+
+var a_temp_cookie = '';
+
+var cookie_name = '';
+
+var cookie_value = '';
+
+var b_cookie_found = false;
+
+for ( i = 0; i < a_all_cookies.length; i++ )
+
+{
+
+a_temp_cookie = a_all_cookies\[i\].split( '=' );
+
+cookie_name = a_temp_cookie\[0\].replace(/^\s+|\s+$/g, '');
+
+if ( cookie_name == check_name )
+
+{
+
+b_cookie_found = true;
+
+if ( a_temp_cookie.length > 1 )
+
+{
+
+cookie_value = unescape( a_temp_cookie\[1\].replace(/^\s+|\s+$/g, '') );
+
+}
+
+return cookie_value;
+
+break;
+
+}
+
+a_temp_cookie = null;
+
+cookie_name = '';
+
+}
+
+if ( !b_cookie_found )
+
+{
+
+return null;
+
+}
+
+}
+
+function setCookie(name, value, path)
+
+{
+
+document.cookie = name+"="+value+";path="+path;
+
+}
+
+function deleteCookie(name, path)
+
+{
+
+if (Get_Cookie(name))
+
+document.cookie = name+"="+((path)?";path="+path:"")+";expires=Thu, 01-Jan-1970 00:00:01 GMT";
+
+}
+
+var secs
+
+var timerID = null
+
+var timerRunning = false
+
+var delay = 1000
+
+function InitializeTimer()
+
+{
+
+if(Get_Cookie('timer')){
+
+document.getElementById('cookieText').innerHTML = 'cookie found with value '+Get_Cookie('timer');
+
+secs = Get_Cookie('timer');
+
+}
+
+else{
+
+document.getElementById('cookieText').innerHTML = 'no cookie found timer starting from default value';
+
+secs = 100;
+
+}
+
+StartTheTimer();
+
+}
+
+function StopTheClock()
+
+{
+
+if(timerRunning)
+
+clearTimeout(timerID);
+
+timerRunning = false;
+
+deleteCookie('timer', '/');
+
+document.getElementById('cookieText').innerHTML = 'cookie deleted';
+
+}
+
+function StartTheTimer()
+
+{
+
+if (secs==0)
+
+{
+
+document.getElementById('tim').innerHTML = secs;
+
+setCookie('timer', secs, '/');
+
+StopTheClock();
+
+}
+
+else
+
+{
+
+self.status = secs;
+
+document.getElementById('tim').innerHTML = secs;
+
+setCookie('timer', secs, '/');
+
+secs = secs - 1;
+
+timerRunning = true;
+
+timerID = self.setTimeout("StartTheTimer()", delay);
+
+}
+
+}
+
+//-->
+
+</script>
+</head>
+<body>
+<div id="tim"></div>
+<div id="cookieText"></div>
+<script type="text/javascript">
+
+InitializeTimer();
+
+</script>
+</body>
+</html>
